@@ -1,0 +1,5 @@
+* Build our Car <2018-02-15 Thu>
+** Sensors Setup
+   - Range Sensor
+     + Move vl53l0x-arduino-master folder into Arduino library
+     + Run the test code: the test code gives the address to

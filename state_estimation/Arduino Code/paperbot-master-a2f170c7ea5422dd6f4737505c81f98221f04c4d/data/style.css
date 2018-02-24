@@ -1,0 +1,61 @@
+h1 {
+  text-align: center;
+}
+
+.btns {
+    width: 200px;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.wslog {
+  width: 100%;
+}
+
+button {
+  background-color:#ffaa42;
+  -moz-border-radius:13px;
+  -webkit-border-radius:13px;
+  border-radius:13px;
+  display:inline-block;
+  cursor:pointer;
+  color:#ffffff;
+  font-family:Arial;
+  font-size:20px;
+  font-weight:bold;
+  padding:20px 20px;
+  text-decoration:none;
+
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Chrome/Safari/Opera */
+     -khtml-user-select: none; /* Konqueror */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently */
+}
+
+.smbutton {
+  padding: 5px 5px;
+}
+
+button:hover {
+  background-color:#ff8c00;
+}
+
+button:active {
+  position:relative;
+  top:1px;
+}
+
+button:focus {
+  outline:0;
+}
+
+input[type=range][orient=vertical]
+{
+    writing-mode: bt-lr; /* IE */
+    -webkit-appearance: slider-vertical; /* WebKit */
+    width: 10px;
+    height: 200px;
+    padding: 0 0;
+}

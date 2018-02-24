@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset=utf-8 />
+  <title>whooo control robots</title>
+
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+</head>
+
+<body>
+  <h1>Yay Robots!</h1>
+
+  <table width="100%">
+    <tr>
+      <td>
+        <input type="range" name="slide" id="ltSlider" orient="vertical" min=0 max=180 value=90/>
+      </td>
+      <td>
+        <table class=btns>
+          <tr>
+            <td><button id="leftup"    name="bt" value="UL" class="smbutton">⏫</button></td>
+            <td><button id="forward"   name="bt" value="FD" class="button">▲</button></td>
+            <td><button id="rightup"   name="bt" value="UR" class="smbutton">⏫</button></td>
+          </tr>
+          <tr>
+            <td><button id="left"      name="bt" value="LT" class="button">◀</button></td>
+            <td><button id="center"    name="bt" value="CC" class="smbutton">❤</button></td>
+            <td><button id="right"     name="bt" value="RT" class="button">▶</button></td>
+          </tr>
+          <tr>
+            <td><button id="leftdown"  name="bt" value="DL" class="smbutton">⏬</button></td>
+            <td><button id="backward"  name="bt" value="BK" class="button">▼</button></td>
+            <td><button id="rightdown" name="bt" value="DR" class="smbutton">⏬</button></td>
+            <td></td>
+          </tr>
+        </table>
+      </td>
+      <td>
+        <input type="range" name="slide" id="rtSlider" orient="vertical" min=0 max=180 value=90/>
+      </td>
+    </tr>
+  </table>
+
+  <table class=wslog> <tr>
+      <td width="50%" valign="top">
+        <div id="wsRx" class="log"></div>
+      </td>
+      <td width="50%" valign="top">
+        <div id="wsTx" class="log"></div>
+      </td>
+  </tr></table>
+
+  <script>
+    /* Handle button / slider clicks + touches */
+
+    window.onload = function () {
+      var ltSlider = document.getElementById("ltSlider");
+      var rtSlider = document.getElementById("rtSlider");
+
+      var btns = document.getElementsByName("slide");
+      for (var i = 0; i < btns.length; i++) {
+          btns[i].oninput = function(e) {sliderSend(); e.stopPropagation(); e.preventDefault();};
+          btns[i].onchange = function() {btnRelease(); e.stopPropagation(); e.preventDefault();}
+      }
+
+      var btns = document.getElementsByName("bt");
+      for (var i = 0; i < btns.length; i++) {
+          btns[i].ontouchstart = function(e) {btnSend(this.value); e.stopPropagation(); e.preventDefault();};
+          btns[i].onmousedown = function(e) {btnSend(this.value); e.stopPropagation(); e.preventDefault();};
+          btns[i].ontouchend = function() {btnRelease(); e.stopPropagation(); e.preventDefault();}
+          btns[i].onmouseup = function() {btnRelease(); e.stopPropagation(); e.preventDefault();}
+      }
+    }
+
+    /* Handle keyboard commands */
+    document.onkeydown = function(e) {
+        e = e || window.event;
+        switch(e.which || e.keyCode) {
+        case 38:
+            btnSend("FD");
+            console.log("Up key");
+            break;
+        case 40:
+            btnSend("BK");
+            console.log("Down key");
+            break;
+        case 37:
+            btnSend("LT");
+            console.log("Left key");
+            break;
+        case 39:
+            btnSend("RT");
+            console.log("Right key");
+            break;
+      }
+    }
+    document.onkeyup = function(e) {
+        btnRelease();
+        console.log("Key up");
+    }
+
+    /* Logging */
+    var wsRx = document.getElementById("wsRx");
+    var wsTx = document.getElementById("wsTx");
+    function rxLog(text) {
+      wsRx.innerHTML = text + wsRx.innerHTML.split("<br>").slice(0, 4).join("<br>") ;
+    }
+    function txLog(text) {
+      wsTx.innerHTML = text + wsTx.innerHTML.split("<br>").slice(0, 4).join("<br>") ;
+    }
+
+    /* WebSocket utilities */
+    var connection = new WebSocket('ws://'+location.hostname+':81/', ['arduino']);
+    connection.onopen = function(){
+      var timeStr = new Date().toLocaleTimeString();
+      var text = "(" + timeStr + ") : CONNECTED <br>";
+      connection.send('Connect ' + new Date()); 
+      txLog(text);
+    };
+    connection.onerror = function(error){
+      var timeStr = new Date().toLocaleTimeString();
+      var text = "(" + timeStr + ") : EE = " + error + "<br>";
+      console.log('WebSocket Error ', error);
+      txLog(text);
+    };
+    connection.onmessage = function(e){
+      var timeStr = new Date().toLocaleTimeString();
+      var text = "(" + timeStr + ") : RX = " + e.data + "<br>";
+      console.log('Server: ', e.data);
+      rxLog(text);
+    };
+
+    /* Commands */
+
+    function sliderSend() {
+      var timeStr = new Date().toLocaleTimeString();
+      var text = "(" + timeStr + ") : TX = ~(" + ltSlider.value + ", " + rtSlider.value + ")<br>";
+      txLog(text);
+
+      var bbuf = new Uint8Array(3);
+      bbuf[0] = 126; // ~
+      bbuf[1] = ltSlider.value;
+      bbuf[2] = rtSlider.value;
+
+      console.log("Slider moved, sending ~(" + ltSlider.value + ", " + rtSlider.value + ")");
+      connection.send(bbuf.buffer);
+    }
+
+    function btnSend(val) {
+      var timeStr = new Date().toLocaleTimeString();
+      var text = "(" + timeStr + ") : TX = #" + val + "<br>";
+      txLog(text);
+
+      console.log('Button pressed, sending #'+val); 
+      connection.send('#'+val);
+    }
+
+    function btnRelease() {
+      var timeStr = new Date().toLocaleTimeString();
+      var text = "(" + timeStr + ") : TX = #0<br>";
+      txLog(text);
+
+      ltSlider.value = 90;
+      rtSlider.value = 90;
+
+      console.log('Button released'); 
+      connection.send('#0');
+    }
+
+  </script>
+
+
+  </body>
+</html>
