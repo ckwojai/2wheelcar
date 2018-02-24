@@ -96,43 +96,43 @@ We define the following threshold angles:
 \end{align*}
 Under our assumption, our expression for $l_x$  changes under these four cases:
 \begin{align*}
-  l_x = \frac{L_x - r_x}{\cos \theta} \quad \theta > 0, \theta < \theta_{ttt} \\
-  l_x = \frac{L_y - r_y}{\cos (90 - \theta)} \quad \theta > 0, \theta > \theta_{ttt} \\
-  l_x = \frac{L_y - r_y}{\cos \theta} \quad \theta < 0, \theta < \theta_{ttb} \\
-  l_x = \frac{r_y}{\cos (90 - \theta)} \quad \theta < 0, \theta > \theta_{ttb}
+  l_x = \frac{L_x - r_x}{\cos \theta} \quad \theta > 0, |\theta| < \theta_{ttt} \\
+  l_x = \frac{L_y - r_y}{\cos (90 - \theta)} \quad \theta > 0, |\theta| > \theta_{ttt} \\
+  l_x = \frac{L_y - r_y}{\cos \theta} \quad \theta < 0, |\theta| < \theta_{ttb} \\
+  l_x = \frac{r_y}{\cos (90 - \theta)} \quad \theta < 0, |\theta| > \theta_{ttb}
 \end{align*}
 Our expression for $l_y$ changes under these four cases:
 \begin{align*}
-  l_y = \frac{r_y}{\cos \theta} \quad \theta > 0, \theta < \theta_{ttr} \\
-  l_y = \frac{L_x - r_x}{\cos (90 - \theta)} \quad \theta > 0, \theta > \theta_{ttr} \\
-  l_y = \frac{r_y}{\cos \theta} \quad \theta < 0, \theta < \theta_{ttl} \\
-  l_y = \frac{r_x}{\cos (90 -\theta)} \quad \theta < 0, \theta > \theta_{ttl}
+  l_y = \frac{r_y}{\cos \theta} \quad \theta > 0, |\theta| < \theta_{ttr} \\
+  l_y = \frac{L_x - r_x}{\cos (90 - \theta)} \quad \theta > 0, |\theta| > \theta_{ttr} \\
+  l_y = \frac{r_y}{\cos \theta} \quad \theta < 0, |\theta| < \theta_{ttl} \\
+  l_y = \frac{r_x}{\cos (90 -\theta)} \quad \theta < 0, |\theta| > \theta_{ttl}
 \end{align*}
 Our expression for $\alpha = \theta$ doesn't change under our assumption. \par
 To summarize, we have total of 8 cases summarized below,
 \begin{align*}
-  \intertext{$\theta>0, \theta < \theta_{ttt}, \theta < \theta_{ttr}$}
+  \intertext{$\theta>0, |\theta| < \theta_{ttt}, |\theta| < \theta_{ttr}$}
   y = 
   \begin{bmatrix}
     \frac{L_x - r_x}{\cos \theta} \\
     \frac{r_y}{\cos \theta} \\
     \alpha = \theta
   \end{bmatrix}
-  \intertext{$\theta>0, \theta < \theta_{ttt}, \theta > \theta_{ttr}$}
+  \intertext{$\theta>0, |\theta| < \theta_{ttt}, |\theta| > \theta_{ttr}$}
   y = 
   \begin{bmatrix}
     \frac{L_x - r_x}{\cos \theta} \\
     \frac{L_x - r_x}{\cos (90 - \theta)} \\
     \alpha = \theta
   \end{bmatrix}
-  \intertext{$\theta>0, \theta > \theta_{ttt}, \theta < \theta_{ttr}$}
+  \intertext{$\theta>0, |\theta| > \theta_{ttt}, |\theta| < \theta_{ttr}$}
   y = 
   \begin{bmatrix}
     \frac{L_y - r_y}{\cos (90 - \theta)} \\    
     \frac{r_y}{\cos \theta} \\
     \alpha = \theta
   \end{bmatrix}
-  \intertext{$\theta>0, \theta > \theta_{ttt}, \theta > \theta_{ttr}$}
+  \intertext{$\theta>0, |\theta| > \theta_{ttt}, |\theta| > \theta_{ttr}$}
   y = 
   \begin{bmatrix}
     \frac{L_y - r_y}{\cos (90 - \theta)} \\
@@ -140,28 +140,28 @@ To summarize, we have total of 8 cases summarized below,
     \alpha = \theta
   \end{bmatrix}
   %% \theta < 0
-  \intertext{$\theta<0, \theta < \theta_{ttb}, \theta < \theta_{ttl}$}
+  \intertext{$\theta<0, |\theta| < \theta_{ttb}, |\theta| < \theta_{ttl}$}
   y = 
   \begin{bmatrix}
     \frac{L_y - r_y}{\cos \theta} \\
     \frac{r_y}{\cos \theta} \\
     \alpha = \theta
   \end{bmatrix}
-  \intertext{$\theta<0, \theta < \theta_{ttb}, \theta > \theta_{ttl}$}
+  \intertext{$\theta<0, |\theta| < \theta_{ttb}, |\theta| > \theta_{ttl}$}
   y = 
   \begin{bmatrix}
     \frac{L_x - r_x}{\cos \theta} \\
     \frac{r_x}{\cos (90 -\theta)} \\
     \alpha = \theta
   \end{bmatrix}
-  \intertext{$\theta<0, \theta > \theta_{ttb}, \theta < \theta_{ttl}$}
+  \intertext{$\theta<0, |\theta| > \theta_{ttb}, |\theta| < \theta_{ttl}$}
   y = 
   \begin{bmatrix}
     \frac{r_y}{\cos (90 - \theta)} \\    
     \frac{r_y}{\cos \theta} \\
     \alpha = \theta
   \end{bmatrix}
-  \intertext{$\theta<0, \theta > \theta_{ttb}, \theta > \theta_{ttl}$}
+  \intertext{$\theta<0, |\theta| > \theta_{ttb}, |\theta| > \theta_{ttl}$}
   y = 
   \begin{bmatrix}
     \frac{r_y}{\cos (90 - \theta)} \\        
@@ -171,7 +171,7 @@ To summarize, we have total of 8 cases summarized below,
 \end{align*}
 \\
 \\
-We need to linearize all these cases such that, $y = H u$, where H is a matrix. Here we will demonstrate how to do linearization for one case, $\theta >0, \theta < \theta_{ttt}, \theta < \theta_{ttr}$,
+We need to linearize all these cases such that, $y = H u$, where H is a matrix. Here we will demonstrate how to do linearization for one case, $\theta >0, |\theta| < \theta_{ttt}, |\theta| < \theta_{ttr}$,
 \begin{align*}
   l_x &= \frac{L_x - r_x}{\cos \theta} \\
   l_y &= \frac{r_y}{\cos \theta} \\
