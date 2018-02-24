@@ -50,9 +50,10 @@
   $\phi_L$ & Servo input: angle rotation of the left wheel \\
   $\phi_R$ & Servo input: angle rotation of the right wheel \\
   $\theta_{tht}$ & Top half threshold angle \\
-  $\theta_{thb}$ & Bottom half threshold angle 
+  $\theta_{thb}$ & Bottom half threshold angle \\
+  $\theta_{thr}$ & Bottom right threshold angle \\
+  $\theta_{thl}$ & Bottom left threshold angle \\  
 \end{tabular}\\
-
 \section{Assumption}
 For the sake of simplicity, we have the following assumption in the derivation below
 \begin{enumerate}
@@ -86,6 +87,13 @@ For the sake of simplicity, we have the following assumption in the derivation b
 
 \section{Sensor Measurement}
 We want to find a function such that $y = h(x)$ \\
+We define the following threshold angles:
+\begin{align*}
+  \theta_{tht} &= \arctan(\frac{L_y - r_y}{L_x - r_x}) \\
+  \theta_{thb} &= \arctan(\frac{r_y}{r_x}) \\
+  \theta_{thr} &= \arctan(\frac{L_x-r_x}{r_y}) \\
+  \theta_{thl} &= \arctan(\frac{r_x}{r_y})
+\end{align*}
 Under our assumption, our expression for $l_x$  changes under these four cases:
 \begin{align*}
   l_x = \frac{L_x - r_x}{\cos \theta} \quad \theta > 0, \theta < \theta_{ttt} \\
@@ -163,7 +171,7 @@ To summarize, we have total of 8 cases summarized below,
 \end{align*}
 \\
 \\
-We need to linearize all these cases such that, $y = H u$, where H is a matrix. Here we will demonstrate how to d linearization for one case, $\theta >0, \theta < \theta_{ttt}, \theta < \theta_{ttr}$,
+We need to linearize all these cases such that, $y = H u$, where H is a matrix. Here we will demonstrate how to do linearization for one case, $\theta >0, \theta < \theta_{ttt}, \theta < \theta_{ttr}$,
 \begin{align*}
   l_x &= \frac{L_x - r_x}{\cos \theta} \\
   l_y &= \frac{r_y}{\cos \theta} \\
