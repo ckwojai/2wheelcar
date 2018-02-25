@@ -49,11 +49,13 @@
   $\theta$ & absolute orientation of the car \\
   $\tau_L$ & Servo input: delay time of the left wheel \\
   $\tau_R$ & Servo input: delay time of the right wheel \\
-  $\theta_{tht}$ & Top half threshold angle \\
-  $\theta_{thb}$ & Bottom half threshold angle \\
-  $\theta_{thr}$ & Bottom right threshold angle \\
-  $\theta_{thl}$ & Bottom left threshold angle \\
-  $\epsilon_{str}$ & Picking variable, 1 if going straight line, 0 otherwise
+  $\theta_{tht}$ & top half threshold angle \\
+  $\theta_{thb}$ & bottom half threshold angle \\
+  $\theta_{thr}$ & bottom right threshold angle \\
+  $\theta_{thl}$ & bottom left threshold angle \\
+  $\epsilon_{str}$ & picking variable, 1 if going straight line, 0 otherwise \\
+  $w_t$ & process noise \\
+  $v_t$ & measurement noise
 \end{tabular}\\
 \section{Assumption}
 For the sake of simplicity, we have the following assumption in the derivation below
@@ -249,7 +251,36 @@ To combine these two cases into one expression, we define a picking variable $\e
 \end{align*}
 
 \section{Kalmen Filter Procedure}
+\subsection{Kalman Gain Update}
+\begin{enumerate}
+\item Initial Error Covariance $P_{1|0} = P_0, t = 1$
+\item Compute Gain: $K_t = P_{t|t-1} H_t^T [H_t^T P_{t|t-1} H_t^T + R_t]^{-1}$
+\item Update error covariance
+  \begin{enumerate}
+  \item $P_t = (I-K_tH_t)P_{t|t-1}$
+  \item $P_{t+1|t} = A_t P A_t^T + G_t Q_t G_t^T$
+  \end{enumerate}
+\item t = t+1
+\item Go back to (2) until stop condition
+\end{enumerate}
+where
+\begin{align*}
+  R_t &= E[v_t v_t^T] \\
+  Q_t &= E[w_t w_t^T]
+\end{align*}
 
+\subsection{State Estimation}
+\begin{enumerate}
+\item Initialize estimated state $\hat{x}_0$
+\item Collect new measurement $y_t$
+\item Update State Estimate with new measurement, with updated Kalman gain from above
+  \begin{enumerate}
+  \item $\hat{x}_{t|t-1} = A_{t-1} \hat{x}_{t-1}$ 
+  \item $\hat{x}_t = \hat{x}_{t|t-1} + K_t(y_t - H_t \hat{x}_{t|t-1})$
+  \end{enumerate}
+\item t = t+1
+\item Go back to (2) until stop condition  
+\end{enumerate}
 \end{document}
 %==================================================%
 % Bibliography starts here
