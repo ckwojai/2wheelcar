@@ -39,7 +39,6 @@
 \begin{tabular}{cp{0.6\textwidth}}
   $L_x$ & length of the box  \\
   $L_y$ & width of the box \\
-  $W$ & width of the robot \\
   $C_v$ & coefficient, distance traveled by the wheel per unit of delay time \\
   $C_r$ & coefficient, body orientation changed by the wheel per unit of delay time \\
   $l_x$ & range sensor measurement along x \\
@@ -223,8 +222,8 @@ First of all, 2 cases
 \end{align*}
 To combine these two cases into one expression, we define a picking variable $\epsilon_{str} = \tau_{L,t} * \tau_{R,t} > 0)$ taking value 0 or 1. Then,
 \begin{align*}
-  r_{x,t+1} &= r_{x,t} + \epsilon_{str} * C_v \tau_{R,t} \cos \theta - (1-\epsilon_{str})*W[1 - \cos(C_r\tau_{R,t})]\\
-  r_{y,t+1} &= r_{y,t} + \epsilon_{str} * C_v \tau_{R,t} \sin \theta + (1-\epsilon_{str})*W[\sin{(C_{r}\tau_{R,t})}]\\
+  r_{x,t+1} &= r_{x,t} + \epsilon_{str} * C_v \tau_{R,t} \cos \theta \\x
+  r_{y,t+1} &= r_{y,t} + \epsilon_{str} * C_v \tau_{R,t} \sin \theta \\
   \theta_{t+1} &= \theta_t + (1 - \epsilon_{str}) * C_r \tau_{R,t} \\
   \intertext{In matrix form,}
   x_{t+1} &=

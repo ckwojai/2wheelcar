@@ -212,7 +212,7 @@ void loop()
   // Find yours here: http://www.magnetic-declination.com/
   
   // If you cannot find your Declination, comment out these two lines, your compass will be slightly off.
-  float declinationAngle = 0.0404;
+  float declinationAngle = 0.0467;
   heading += declinationAngle;
 
   // Correct for when signs are reversed.
