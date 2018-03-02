@@ -12,7 +12,7 @@
 
 #define STA_MAXTRIES 10
 
-ESP8266WebServer httpServer = ESP8266WebServer(80);
+ESP8266WebServer httpServer(80);
 WebSocketsServer wsServer = WebSocketsServer(81);
 
 //

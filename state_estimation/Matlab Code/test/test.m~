@@ -1,25 +1,86 @@
+clear all; close all; clc;
 %% Initialization
-% Units in cm
-Lx = 43;
-Ly = 33;
-Cv = 12;
-Cr = 7;
-x = [12 3 0];
-%% One Iteration
-% Generate process noise and measurment noise
-v = wgn(3,1,1); % white Gaussian with var = 1
-w = wgn(3,1,1);
-R = cov(v,v) 
-Q = cov(w,w)
-% Sensor Measurement Problem
-l0 = [(Lx - x(1)) / cos(x(3)), (x(2)/cos(x(3)))];
-[H, C] = hmatrix(x, l0, Lx, Ly);
-% State Evolution Problem
-p_str = (u(1) * u(2)) >= 0;
-A = eye(3);
-B = bmatrix(p_str, Cv, Cr, x(3));
+% Constants in cm
+Lx = 430;
+Ly = 330;
+Cv = 120;
+Cr = 70 * pi/180;
+% Generate process and measurment noise covariance matrix
+v = [];
+for i=1:100
+    v = [v, [10;10;10*pi/180].*wgn(3,1,1)]; 
+end
+Q = 1/99 * v * v.';
+R = 1* eye(3);
+Q = zeros(3);
+%% Simulation Cases
+% initialization
+x_init = [140; 30; 0];
+%%%%%%%%%%%%% Inputs %%%%%%%%%%%%%
+u{1}=[1;1]; %This is the first input, it means that "go forward by 120mm".
+u{2}=[-0.5, 0.5];%This is the second input, it means that "turn to the left by 30 degree".
+u{3}=[1;1];
+u{4}=[1.5;-1.5];
+u{5}=[-0.8;-0.8];%This input means that "go backward by 100mm".
+u{6}=[-0.
+%%%%%%%%%%%%%% Raw Measurements %%%%%%%%%%%%%%%%
+%These are the made up measurements for the simulation test, we will need
+%to replace them with the real raw measurements from the sensors later.
+[x1, y1] = state_evo_to_sensor(x_init, u{1}, Cv, Cr, Lx, Ly);
+[x2, y2] = state_evo_to_sensor(x1, u{2}, Cv, Cr, Lx, Ly);
+[x3, y3] = state_evo_to_sensor(x2, u{3}, Cv, Cr, Lx, Ly);
+[x4, y4] = state_evo_to_sensor(x3, u{4}, Cv, Cr, Lx, Ly);
+[x5, y5] = state_evo_to_sensor(x4, u{5}, Cv, Cr, Lx, Ly);
+m{1}=y1;
+m{2}=y2;
+m{3}=y3;
+m{4}=y4;
+m{5}=y5;
+figure(1);
+subplot(2,1,1);
+plot_car(x_init);
+hold on
+plot_car(x1);
+plot_car(x2);
+plot_car(x3);
+plot_car(x4);
+plot_car(x5);
+%% Kalman Filter
+% init
+P_pri = eye(3);
+t = 1;
+x_pri = x_init;
+x_pos = x_init;
+I = eye(3);
+subplot(2,1,2);
+plot_car(x_init);
+for i=1:1:8
+    % Kalman Gain Update
+    [H, C] = hmatrix(x_pri, Lx, Ly);
+    K = P_pri * H.' * inv(H * P_pri * H.' + R)
+    P_pos = (I - K*H)*P_pri;
+    P_pri = P_pos + Q;
+    % Measurment and State Estimation Update
+    b = bfunction(x_pri, u{i}, Cv, Cr);
+    x_pri = x_pos + b;
+    x_pos = x_pri + K*(m{i} - H*x_pri - C);
+    hold on
+    plot_car(x_pos);
+end
 
-%% Calculate State
-y = H*x.' + C;
-u = [1 1];
-x_next = A*x.' + B*u.'
+
+%% Test: Sensor Measurement
+% All test cases matches the non-linear model
+x = [Lx/2+100; Ly/2+100; -pi/3];
+[H, C] = hmatrix(x, Lx, Ly);
+y_act = hfunction(x, Lx, Ly)
+y_lin = H*x + C
+%% Test: State Evolution
+% Rotation centering works ^_^
+x_init = [200; 100; 0];
+u = [0.5; -0.5];
+b = bfunction(x_init, u, Cv, Cr);
+x_next = x_init + b
+plot_car(x_init);
+hold on
+plot_car(x_next);

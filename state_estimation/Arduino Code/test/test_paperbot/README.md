@@ -20,7 +20,7 @@
 
 #### ESP8266FS tool
 - To install, create "tools" folder in Arduino, download, and unzip. See 
-- https://github.com/esp8266/Arduino/blob/master/doc/filesystem.md#uploading-files-to-file-system
+- https://github.com/esp8266/arduino-esp8266fs-plugin
 
 ### Hardware: 
 - NodeMCU Amica DevKit Board (ESP8266 chip)

@@ -62,20 +62,16 @@ void moving_backward_right_wheel(int velocity)
 
 
 void setup() {
-servo_left.attach(D0);
-servo_right.attach(D1);
+servo_left.attach(D1);
+servo_right.attach(D2);
 }
 
 
 void loop() {
-moving_forward(30,1000);
-stop_the_car(2000);
-moving_backward(30,1000);
-stop_the_car(2000);
-moving_backward_right_wheel(20);
-moving_forward_left_wheel(20);
-delay(3000);
-stop_the_car(2000);
-
-
+servo_left.write(0);
+servo_right.write(180);
+delay(5000);
+servo_left.write(90);
+servo_right.write(90);
+delay(5000);
 }

@@ -220,7 +220,8 @@ void loop()
   Serial.print (my);
   Serial.print ("\tMz:");
   Serial.print (mz);  
-  Serial.println ("\t");
+  Serial.print ("\t");
+  Serial.println (sqrt(mx*mx + my*my + mz*mz));
   
   
   // End of line

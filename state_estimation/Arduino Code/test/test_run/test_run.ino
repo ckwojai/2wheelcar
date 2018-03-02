@@ -9,6 +9,85 @@
  */
 #include <Wire.h>
 #include <VL53L0X.h>
+#include <Servo.h>
+
+Servo servo_left;
+Servo servo_right;
+int stop_position=90; //For the 360 degree servo,
+                      //0 goes full speed clockwise; 
+                      //90 stop spinning ;
+                      //180 goes full speed counterclockwise.
+
+int friction=7; // If the surface is smooth, make this value greater.
+
+
+////////////////////////////Servo test function 
+//Control Both Wheels
+void moving_forward(int velocity,int duration)
+{
+  servo_left.write(stop_position+velocity);
+  servo_right.write(stop_position-velocity-4);
+  delay(duration);
+  }
+  
+void moving_backward(int velocity,int duration)
+{
+  servo_left.write(stop_position-velocity);
+  servo_right.write(stop_position+velocity);
+  delay(duration);
+  }
+
+ void stop_the_car_forward(int duration)
+{
+  servo_left.write(stop_position);
+  delay(30);
+  servo_right.write(stop_position);
+  delay(duration);
+  }
+   void stop_the_car(int duration)
+{
+  servo_left.write(stop_position);
+  servo_right.write(stop_position);
+  delay(duration);
+  }
+//void turn_left(int degree)
+
+//Control a Single Wheel
+void moving_forward_right_wheel(int velocity)
+{
+  servo_right.write(stop_position-velocity);
+  
+  }
+void moving_forward_left_wheel(int velocity)
+{
+  servo_left.write(stop_position+velocity);
+  
+  }
+void moving_backward_right_wheel(int velocity)
+{
+  servo_right.write(stop_position+velocity);
+ 
+  }
+ void moving_backward_left_wheel(int velocity)
+{
+  servo_left.write(stop_position-velocity);
+  
+  }
+  void stop_right_wheel()
+{
+  servo_right.write(stop_position);
+
+  }
+   void stop_left_wheel()
+{
+  servo_left.write(stop_position);
+  
+  }
+
+
+
+
+//////////////////////////////////////////////////////
 
 #define SDA_PORT 14
 #define SCL_PORT 12
@@ -70,7 +149,10 @@ for (int jj = 0; jj < 3; jj++) {
   if(mag_temp[jj] > mag_max[jj]) mag_max[jj] = mag_temp[jj];
   if(mag_temp[jj] < mag_min[jj]) mag_min[jj] = mag_temp[jj];
 }
+
 }
+
+
 Serial.println("finish for loop");
 // Get hard iron correction
  mag_bias[0]  = (mag_max[0] + mag_min[0])/2;  // get average x mag bias in counts
@@ -94,9 +176,15 @@ Serial.println(mag_max[0]);
  dest2[2] = avg_rad/((float)mag_scale[2]);
  Serial.println("Mag Calibration done!");  
 }
+
+
 void setup()
 {
 
+  //
+  servo_left.attach(D2);
+  servo_right.attach(D1);
+  //
   pinMode(D3, OUTPUT);
   pinMode(D4, OUTPUT);
   digitalWrite(D7, LOW);
@@ -160,6 +248,7 @@ void setup()
 }
 
 long int cpt=0;
+float offset = 0;
 void loop()
 {
    // _______________
@@ -212,7 +301,7 @@ void loop()
   // Find yours here: http://www.magnetic-declination.com/
   
   // If you cannot find your Declination, comment out these two lines, your compass will be slightly off.
-  float declinationAngle = 0.0467;
+  float declinationAngle = 0.0404;
   heading += declinationAngle;
 
   // Correct for when signs are reversed.
@@ -225,16 +314,41 @@ void loop()
 
   // Convert radians to degrees for readability.
   float headingDegrees = heading * 180/PI; 
+ 
+  if (cpt==15)
+  {
+     offset = heading;
+     Serial.println("Printing OFFSET: \t");
+     Serial.println(offset);
+  }
+  float test_heading = heading - offset;
+  // Correct for when signs are reversed.
+  if(test_heading < 0)
+    test_heading += 2*PI;
+
+  // Check for wrap due to addition of declination.
+  if(test_heading > 2*PI)
+    test_heading -= 2*PI;
+  float test_degree = test_heading * 180/PI;
   Serial.print("Theta:  ");
   Serial.print(headingDegrees);
   Serial.print("\t");
-  Serial.print("lx: ");
-  Serial.print(sensor.readRangeSingleMillimeters());
-  Serial.print("\t");
-  if (sensor.timeoutOccurred()) { Serial.print(" TIMEOUT"); }
-  Serial.print("ly: ");
-  Serial.println(sensor2.readRangeSingleMillimeters());
-  if (sensor.timeoutOccurred()) { Serial.println(" TIMEOUT"); }
+  Serial.print("Theta_Afteroffset:  ");
+  Serial.println(test_degree);
+  ///////////////////////////////////////////////Servo test
+  if (cpt == 50)
+  {    
+  moving_forward(20,1000);
+  stop_the_car_forward(1000);  
+  moving_forward_right_wheel(40);
+  moving_backward_left_wheel(40);
+  delay(friction*45);
+  stop_the_car(1000);
+  moving_forward(20,1000);
+  stop_the_car_forward(1000);
+  }
+  
+  //////////////////////////////////////////////////////////
   delay(1000);
 }
 
