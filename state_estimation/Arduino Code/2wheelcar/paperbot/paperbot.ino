@@ -81,8 +81,8 @@ int servo_right_ctr = 90;
 
 
 // WiFi AP parameters
-char ap_ssid[13];
-char* ap_password = "";
+char* ap_ssid = "2wheelcar";
+char* ap_password = "12345678";
 
 float d1=10;
 float d2 =30;
@@ -112,8 +112,7 @@ typedef struct Measure
 void setup() {
     setupPins();
     sensorsSetup();
-    sprintf(ap_ssid, "ESP_%08X", ESP.getChipId());
-
+    // sprintf(ap_ssid, "ESP_%08X", ESP.getChipId());
     for(uint8_t t = 4; t > 0; t--) {
         Serial.printf("[SETUP] BOOT WAIT %d...\n", t);
         Serial.flush();
@@ -366,7 +365,7 @@ struct Measure getMeasurement() {
   struct Measure y;
   y.lx = sensor.readRangeSingleMillimeters();
   y.ly = sensor2.readRangeSingleMillimeters();
-  y.alpha = headingDegrees;
+  y.alpha = heading;
   Serial.print("Theta:  ");
   Serial.print(headingDegrees);
   Serial.print("\t");
