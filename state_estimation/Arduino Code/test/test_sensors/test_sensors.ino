@@ -155,7 +155,6 @@ void setup()
   Serial.print ("Found ");
   Serial.print (count, DEC);
   Serial.println (" device(s).");
-
   delay(3000);
 }
 

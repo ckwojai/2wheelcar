@@ -100,3 +100,10 @@ x_next = x_init + b
 plot_car(x_init);
 hold on
 plot_car(x_next);
+%% Test: New Measurement Data From Arduino
+url = 'http://192.168.4.1:100';
+options = weboptions('Timeout', Inf);
+S=webread(url, options)
+
+
+
