@@ -1,5 +1,6 @@
-function [H, C] = hmatrix(x, x0, Lx, Ly)
+function [H, C] = hmatrix(x, Lx, Ly)
     % get y0 from x0 (linearization centered at x0)
+    x0 = x;
     y0 = hfunction(x0, Lx, Ly);
     % unpack
     rx = x(1);
@@ -79,7 +80,7 @@ function [H, C] = hmatrix(x, x0, Lx, Ly)
         a = (Lx-rx0)*s/c^2;
         b = rx0*c/s_abs^2;
         H = [-1/c, 0, a;
-            -1/s_abs, 0, (-th/th_abs)*b;
+            1/s_abs, 0, (-th/th_abs)*b;
             0, 0, 1];
         C = [rx0/c - a*th0 + lx0;
             -rx0/s_abs + b*th0_abs + ly0;
@@ -91,7 +92,7 @@ function [H, C] = hmatrix(x, x0, Lx, Ly)
         H = [0, 1/s_abs, (-th0/th0_abs)*a;
             0, 1/c, b;
             0, 0, 1];
-        C = [-ry0/s_abs + b*th0_abs + lx0;
+        C = [-ry0/s_abs + a*th0_abs + lx0;
             -ry0/c - b*th0 + ly0;
             0];
     elseif (th <= 0 && th_abs >= thb && th_abs >= thl)
