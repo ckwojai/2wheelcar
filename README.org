@@ -1,0 +1,4 @@
+* INFO
+  - Check out our [[https://github.com/ckwojai/2wheelcar/blob/master/Documentation/2wheelcar.pdf][Documentation]]
+  - Check out our  [[https://www.youtube.com/watch?v=30bCeLLuHEQ&feature=youtu.be][Video Demo]]
+  - BY Amir, Angel, Lin, and Wilson
